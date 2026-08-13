@@ -6,6 +6,7 @@ from telegram import (
     Update,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    BotCommand,
 )
 
 from telegram.ext import (
@@ -1168,6 +1169,37 @@ async def erro_global(
 # MAIN
 # =========================================================
 
+# =========================================================
+# REGISTRAR MENU DE COMANDOS DO TELEGRAM
+# =========================================================
+
+async def configurar_comandos(
+    application: Application,
+):
+    try:
+        await application.bot.set_my_commands(
+            [
+                BotCommand(
+                    "start",
+                    "Pegar código de acesso",
+                ),
+                BotCommand(
+                    "admin",
+                    "Painel administrativo",
+                ),
+            ]
+        )
+    except Exception as erro:
+        print(
+            "ERRO AO REGISTRAR COMANDOS:",
+            repr(erro),
+        )
+
+
+# =========================================================
+# MAIN
+# =========================================================
+
 def main():
     verificar_configuracao()
     criar_tabelas()
@@ -1175,6 +1207,7 @@ def main():
     application = (
         Application.builder()
         .token(BOT_TOKEN)
+        .post_init(configurar_comandos)
         .build()
     )
 
